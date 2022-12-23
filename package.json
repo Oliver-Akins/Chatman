@@ -1,0 +1,35 @@
+{
+  "name": "hapi-api-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Use the makefile\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Oliver Akins",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.2",
+    "@hapi/inert": "^7.0.0",
+    "@iarna/toml": "^2.2.5",
+    "glob": "^8.0.3",
+    "joi": "^17.6.0",
+    "module-alias": "^2.2.2",
+    "path": "^0.12.7",
+    "tslog": "^3.3.4",
+    "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/hapi__hapi": "^20.0.12",
+    "@types/hapi__inert": "^5.2.3",
+    "@types/module-alias": "^2.0.1",
+    "@types/node": "^18.6.4",
+    "joi-to-typescript": "^4.0.5",
+    "ts-node": "^10.9.1"
+  },
+  "_moduleAliases": {
+    "$": "./dist"
+  }
+}
