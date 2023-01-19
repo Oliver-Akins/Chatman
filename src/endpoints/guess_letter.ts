@@ -21,7 +21,7 @@ const route: ServerRoute = {
 		const { channel } = request.params;
 
 		let data = await database.getChannel(channel);
-		console.log(data)
+
 		if (data.key[guess] != null) {
 			data.current = addLetter(data.key, data.current, guess);
 		} else {
