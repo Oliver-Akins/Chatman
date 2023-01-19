@@ -1,6 +1,8 @@
-import { database } from "$/main";
 import { anonymizePhrase, convertToKey, spacePhrase } from "$/utils/game";
+import { config, database } from "$/main";
 import { ServerRoute } from "@hapi/hapi";
+import { readFileSync } from "fs";
+import boom from "@hapi/boom";
 import Joi from "joi";
 
 const route: ServerRoute = {
@@ -10,15 +12,24 @@ const route: ServerRoute = {
 			params: Joi.object({
 				channel: Joi.string().alphanum(),
 			}),
+			query: Joi.object({
+				word_list: Joi.string(),
+			}),
 		},
 	},
 	async handler(request) {
 		const { channel } = request.params;
+		const { word_list } = request.query;
 
 		let data = await database.getChannel(channel);
 
-		// TODO: Get the proper phrase
-		let phrase = "Hello world";
+
+		if (config.game.files[word_list] == null) {
+			throw boom.notAcceptable(`Invalid word list`);
+		};
+		let phrases = readFileSync(config.game.files[word_list] as string, `utf-8`).split(`\n`);
+		let phrase = phrases[Math.floor(Math.random() * phrases.length)].trim();
+
 
 		let spaced = spacePhrase(phrase.toUpperCase());
 		let anonymized = anonymizePhrase(spaced);
@@ -27,7 +38,7 @@ const route: ServerRoute = {
 		data.incorrect = 0;
 		data.key = convertToKey(spaced);
 
-		return `${data.current} (incorrect: ${data.incorrect}/6)`;
+		return `${data.current} (incorrect: ${data.incorrect}/${config.game.max_incorrect})`;
 	},
 };
 export default route;

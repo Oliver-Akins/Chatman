@@ -1,6 +1,13 @@
 import Joi from "joi";
 
 
+export const gameOptionsSchema = Joi.object({
+	files: Joi.object().required().min(1).unknown(true),
+	max_incorrect: Joi.number().min(1).default(6),
+})
+.meta({ className: `gameOptions` })
+.description(`The game-specific options`);
+
 export const serverOptionsSchema = Joi.object({
 	port: Joi
 		.number()
@@ -25,6 +32,7 @@ export const databaseOptionsSchema = Joi.object({
 export const configSchema = Joi.object({
 	server: serverOptionsSchema.required(),
 	database: databaseOptionsSchema.required(),
+	game: gameOptionsSchema.required(),
 })
 .meta({ className: `config` })
 .description(`The configuration format for the server`);
