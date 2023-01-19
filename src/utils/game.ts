@@ -34,12 +34,10 @@ export function anonymizePhrase(phrase: string) {
 export function spacePhrase(phrase: string) {
 	let spaced = ``;
 	for (const letter of phrase) {
-		if (letter.match(/[A-Za-z]/)) {
-			spaced += `${letter} `;
-		} else if (letter == ` `) {
+		if (letter == ` `) {
 			spaced += `█ `;
 		} else {
-			spaced += letter;
+			spaced += `${letter} `;
 		};
 	};
 	return spaced;
