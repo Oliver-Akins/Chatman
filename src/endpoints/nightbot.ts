@@ -1,16 +1,60 @@
 import { nightbotCustomHeadersSchema } from "$/schemas/nightbot";
-import { ServerRoute } from "@hapi/hapi";
+import { Request, ServerRoute } from "@hapi/hapi";
 import boom from "@hapi/boom";
 import Joi from "joi";
 
-const subcommands = {
+interface meta {
+	args: string[];
+	channel: string;
+	user: string;
+}
+
+interface subcommand {
+	modOnly: boolean;
+	handler: (meta: meta, req: Request) => Promise<any>;
+}
+
+const subcommands: {[index: string]: subcommand} = {
 	"start": {
-		method: `POST`,
 		modOnly: true,
+		async handler(meta, req) {
+			let wl = req.query.words;
+
+			return (await req.server.inject({
+				method: `POST`,
+				url: `/${meta.channel}/game?word_list=${wl}`
+			})).payload;
+		},
 	},
-	"show": {
-		method: `GET`,
+	// "show": {
+	// 	modOnly: false,
+	// 	async handler(meta, req) {
+	// 		return (await req.server.inject({
+	// 			method: `GET`,
+	// 			url: `/${meta.channel}/game`
+	// 		})).payload;
+	// 	},
+	// },
+	"guess": {
 		modOnly: false,
+		async handler(meta, req) {
+
+			if (meta.args.length < 2) {
+				return `You need to provide a guess if you want to guess!`
+			};
+
+			if (meta.args[1].length > 1) {
+				return `You can only guess one letter at a time!`
+			};
+
+			return (await req.server.inject({
+				method: `POST`,
+				url: `/${meta.channel}/guess`,
+				payload: {
+					guess: meta.args[1]
+				}
+			})).payload;
+		},
 	},
 };
 
@@ -20,7 +64,7 @@ const route: ServerRoute = {
 		validate: {
 			query: Joi.object({
 				args: Joi.string().allow("").required(),
-				msg: Joi.string(),
+				words: Joi.string(),
 			}),
 			headers: nightbotCustomHeadersSchema.unknown(),
 		},
@@ -49,6 +93,20 @@ const route: ServerRoute = {
 				payload: { guess: args[0] }
 			})).payload;
 		};
+
+		let sc = args[0];
+		if (subcommands[sc] == null) {
+			return `Invalid subcommand. Valid options: ${Object.keys(subcommands).join(`, `)}`;
+		};
+
+		if (subcommands[sc].modOnly && userData.get(`userLevel`) != `moderator`) {
+			return `That command is mod-only! :P`;
+		};
+
+		return subcommands[sc].handler(
+			{ channel, user, args },
+			request
+		);
 	},
 };
 export default route;
