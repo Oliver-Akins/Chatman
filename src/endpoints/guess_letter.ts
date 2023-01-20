@@ -24,6 +24,10 @@ const route: ServerRoute = {
 
 		if (data.key[guess] != null) {
 			data.current = addLetter(data.key, data.current, guess);
+
+			if (data.current == data.solution) {
+				return `Congrats! You won. Merry Chatmanmas!`;
+			};
 		} else {
 			data.incorrect++;
 		};
