@@ -3,3 +3,6 @@ port = 6969
 
 [database]
 uri = ""
+
+[game]
+[game.files]
