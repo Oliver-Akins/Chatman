@@ -32,9 +32,6 @@ async function init() {
 	const server = new Server({
 		port: config.server.port,
 		routes: {
-			files: {
-				relativeTo: path.join(__dirname, `../site`),
-			},
 			cors: true,
 		},
 	});
