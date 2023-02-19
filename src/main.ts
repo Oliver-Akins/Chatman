@@ -48,12 +48,12 @@ async function init() {
 	);
 	for (var file of files) {
 		let route = (await import(path.join(__dirname, file))).default;
-		console.log(`Registering route: ${route.method} ${route.path}`);
+		log.debug(`Registering route: ${route.method} ${route.path}`);
 		server.route(route);
 	};
 
 	server.start().then(() => {
-		console.log(`Server listening on ${server.info.uri}`);
+		log.info(`Server listening on ${server.info.uri}`);
 	});
 };
 
