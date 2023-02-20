@@ -26,15 +26,15 @@ const subcommands: {[index: string]: subcommand} = {
 			})).payload;
 		},
 	},
-	// "show": {
-	// 	modOnly: false,
-	// 	async handler(meta, req) {
-	// 		return (await req.server.inject({
-	// 			method: `GET`,
-	// 			url: `/${meta.channel}/game`
-	// 		})).payload;
-	// 	},
-	// },
+	"show": {
+		modOnly: false,
+		async handler(meta, req) {
+			return (await req.server.inject({
+				method: `GET`,
+				url: `/${meta.channel}/game`
+			})).payload;
+		},
+	},
 	"guess": {
 		modOnly: false,
 		async handler(meta, req) {
