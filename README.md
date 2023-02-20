@@ -6,6 +6,9 @@ using the custom Codenames deck created by chat submissions.
 
 # Setup
 
+## Overlay Themes
+Clone any Chatman overlay themes you'd like into the `site` directory, this is where all of the files are served from.
+
 ## Development
 1. `pnpm install` (install pnpm if it isn't installed already)
 2. `cp config.template.toml config.toml`
