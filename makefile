@@ -11,7 +11,7 @@ OUT_DIR = dist
 
 BIN := $(shell $(PACKAGE_MANAGER) bin)
 
-.PHONY: $(OUT_DIR) dev prod run rund interfaces
+.PHONY: $(OUT_DIR) dev prod run rund interfaces clean
 
 
 $(OUT_DIR):
@@ -33,3 +33,6 @@ rund:
 
 run:
 	NODE_ENV=production $(NODE) $(OUT_DIR)/main.js
+
+clean:
+	$(RM) -rf $(OUT_DIR) tsconfig.tsbuildinfo
