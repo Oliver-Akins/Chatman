@@ -3,8 +3,9 @@
 import "module-alias/register";
 
 import { JSONDatabase } from "./utils/database/json";
-import { Server, Request } from "@hapi/hapi";
+import { Server as wsServer } from "socket.io";
 import { loadConfig } from "./utils/config";
+import { Server } from "@hapi/hapi";
 import inert from "@hapi/inert";
 import { Logger } from "tslog";
 import path from "path";
@@ -33,6 +34,9 @@ async function init() {
 		port: config.server.port,
 		routes: {
 			cors: true,
+			files: {
+				relativeTo: path.join(process.cwd(), `site`),
+			},
 		},
 	});
 
@@ -48,6 +52,40 @@ async function init() {
 		log.debug(`Registering route: ${route.method} ${route.path}`);
 		server.route(route);
 	};
+
+	/*
+	This is the Socket IO server instantiation, this is used by the overlays to
+	get updates in real-time without needing to have a polling request unless
+	it fails to upgrade to websockets.
+	*/
+	const io = new wsServer( server.listener );
+	server.app.io = io;
+
+	io.on(`connection`, (socket) => {
+		log.debug(`New connection from: ${socket.id}`);
+
+		/*
+		The overlay is requesting state info for a specific channel, give it and
+		add the socket to the channel's room.
+		*/
+		socket.on(`state`, async (channel: string) => {
+			let data = await database.getChannel(channel);
+
+			if (data == null) {
+				return socket.emit(`state`, { active: false });
+			};
+			
+			socket.join(channel);
+			return socket.emit(`state`, {
+				active: data.current != null,
+				incorrect: {
+					current: data.incorrect,
+					max: config.game.max_incorrect,
+				},
+				current: data.current,
+			});
+		});
+	});
 
 	server.start().then(() => {
 		log.info(`Server listening on ${server.info.uri}`);

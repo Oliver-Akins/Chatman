@@ -38,6 +38,16 @@ const route: ServerRoute = {
 		data.incorrect = 0;
 		data.key = convertToKey(spaced);
 
+		// Tell the overlay(s) to start a new game
+		request.server.app.io.to(channel).emit(`state`, {
+			active: true,
+			current: data.current,
+			incorrect: {
+				current: data.incorrect,
+				max: config.game.max_incorrect,
+			},
+		})
+
 		return `${data.current} (incorrect: ${data.incorrect}/${config.game.max_incorrect})`;
 	},
 };

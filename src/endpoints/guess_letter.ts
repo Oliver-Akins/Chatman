@@ -25,15 +25,42 @@ const route: ServerRoute = {
 		if (data.key[guess] != null) {
 			data.current = addLetter(data.key, data.current, guess);
 
+			/*
+			The player(s) won the game, so we want to tell the overlay(s) and
+			then respond to the request.
+			*/
 			if (data.current == data.solution) {
-				return `Congrats! You won. Merry Chatmanmas!`;
+				request.server.app.io.to(channel).emit(`finish`, {
+					win: true,
+					solution: data.solution,
+				});
+				return `Congrats! You won. Merry Chatmanmas! Answer: ${data.current}`;
 			};
 		} else {
 			data.incorrect++;
 		};
+
+
+		/*
+		The guess caused the player(s) to lose, so we want to tell all of the
+		overlays and then the user.
+		*/
 		if (data.incorrect >= config.game.max_incorrect) {
+			request.server.app.io.to(channel).emit(`finish`, {
+				win: false,
+				solution: data.solution,
+			});
 			return `Oop, you ded. Answer: ${data.solution}`;
 		};
+
+		// Update all the overlays for the channel
+		request.server.app.io.to(channel).emit(`update`, {
+			current: data.current,
+			incorrect: {
+				current: data.incorrect,
+				max: config.game.max_incorrect,
+			},
+		});
 		return `${data.current} (incorrect: ${data.incorrect}/${config.game.max_incorrect})`;
 	},
 };
