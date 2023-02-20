@@ -1,5 +1,5 @@
+import { config, database } from "$/main";
 import { ServerRoute } from "@hapi/hapi";
-import { database } from "$/main";
 import Joi from "joi";
 
 const route: ServerRoute = {
@@ -15,7 +15,7 @@ const route: ServerRoute = {
 		const { channel } = request.params;
 
 		let { current, incorrect } = await database.getChannel(channel);
-		return { current, incorrect };
+		return `${current} (incorrect: ${incorrect}/${config.game.max_incorrect})`;;
 	},
 };
 export default route;
