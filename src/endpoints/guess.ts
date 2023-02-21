@@ -13,7 +13,11 @@ const route: ServerRoute = {
 			}),
 			payload: Joi.object({
 				type: Joi.string().valid(`letter`, `solve`),
-				guess: Joi.string().length(1),
+				guess: Joi.when(`type`, {
+						is: `letter`,
+						then: Joi.string().length(1),
+						otherwise: Joi.string(),
+					}),
 			}),
 		},
 	},
