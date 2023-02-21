@@ -32,6 +32,10 @@ export class JSONDatabase {
 		};
 	};
 
+	public async resetChannel(name: string) {
+		await this.createChannel(name);
+	};
+
 	public async getChannel(name: string) {
 		return this.data[name];
 	};
