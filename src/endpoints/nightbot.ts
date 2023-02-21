@@ -3,6 +3,11 @@ import { Request, ServerRoute } from "@hapi/hapi";
 import boom from "@hapi/boom";
 import Joi from "joi";
 
+const MOD_LEVELS = [
+	`moderator`,
+	`owner`,
+];
+
 interface meta {
 	args: string[];
 	channel: string;
@@ -118,7 +123,7 @@ const route: ServerRoute = {
 			return `Invalid subcommand. Valid options: ${Object.keys(subcommands).join(`, `)}`;
 		};
 
-		if (subcommands[sc].modOnly && userData.get(`userLevel`) != `moderator`) {
+		if (subcommands[sc].modOnly && !MOD_LEVELS.includes(userData.get(`userLevel`) ?? ``)) {
 			return `That command is mod-only! :P`;
 		};
 
