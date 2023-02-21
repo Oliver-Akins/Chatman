@@ -1,4 +1,5 @@
 import { anonymizePhrase, convertToKey, spacePhrase } from "$/utils/game";
+import { channelSchema } from "$/schemas/general";
 import { config, database } from "$/main";
 import { ServerRoute } from "@hapi/hapi";
 import { readFileSync } from "fs";
@@ -10,7 +11,7 @@ const route: ServerRoute = {
 	options: {
 		validate: {
 			params: Joi.object({
-				channel: Joi.string().alphanum(),
+				channel: channelSchema,
 			}),
 			query: Joi.object({
 				word_list: Joi.string(),

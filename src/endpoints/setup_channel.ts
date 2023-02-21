@@ -1,5 +1,6 @@
-import { database } from "$/main";
+import { channelSchema } from "$/schemas/general";
 import { ServerRoute } from "@hapi/hapi";
+import { database } from "$/main";
 import Joi from "joi";
 
 const route: ServerRoute = {
@@ -7,7 +8,7 @@ const route: ServerRoute = {
 	options: {
 		validate: {
 			payload: Joi.object({
-				channel: Joi.string().alphanum(),
+				channel: channelSchema,
 			}),
 		},
 	},

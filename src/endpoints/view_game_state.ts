@@ -1,3 +1,4 @@
+import { channelSchema } from "$/schemas/general";
 import { config, database } from "$/main";
 import { ServerRoute } from "@hapi/hapi";
 import Joi from "joi";
@@ -7,7 +8,7 @@ const route: ServerRoute = {
 	options: {
 		validate: {
 			params: Joi.object({
-				channel: Joi.string().alphanum(),
+				channel: channelSchema,
 			}),
 		},
 	},
