@@ -51,7 +51,26 @@ const subcommands: {[index: string]: subcommand} = {
 				method: `POST`,
 				url: `/${meta.channel}/guess`,
 				payload: {
+					type: `letter`,
 					guess: meta.args[1]
+				}
+			})).payload;
+		},
+	},
+	"solve": {
+		modOnly: false,
+		async handler(meta, req) {
+
+			if (meta.args.length < 2) {
+				return `You need to provide a solution if you want to solve!`;
+			};
+
+			return (await req.server.inject({
+				method: `POST`,
+				url: `/${meta.channel}/guess`,
+				payload: {
+					type: `solve`,
+					guess: meta.args.slice(1).join(` `)
 				}
 			})).payload;
 		},
