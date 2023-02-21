@@ -1,5 +1,6 @@
+import { addLetter, spacePhrase } from "$/utils/game";
+import { channelSchema } from "$/schemas/general";
 import { config, database } from "$/main";
-import { addLetter } from "$/utils/game";
 import { ServerRoute } from "@hapi/hapi";
 import Joi from "joi";
 
@@ -8,36 +9,58 @@ const route: ServerRoute = {
 	options: {
 		validate: {
 			params: Joi.object({
-				channel: Joi.string().alphanum(),
+				channel: channelSchema,
 			}),
 			payload: Joi.object({
+				type: Joi.string().valid(`letter`, `solve`),
 				guess: Joi.string().length(1),
 			}),
 		},
 	},
 	async handler(request) {
 		// @ts-ignore
-		const guess = request.payload.guess.toUpperCase();
+		let { guess, type } = request.payload;
+		guess = guess.toUpperCase();
 		const { channel } = request.params;
 
 		let data = await database.getChannel(channel);
 
-		if (data.key[guess] != null) {
-			data.current = addLetter(data.key, data.current, guess);
+		let won = false;
 
-			/*
-			The player(s) won the game, so we want to tell the overlay(s) and
-			then respond to the request.
-			*/
-			if (data.current == data.solution) {
-				request.server.app.io.to(channel).emit(`finish`, {
-					win: true,
-					solution: data.solution,
-				});
-				return `Congrats! You won. Merry Chatmanmas! Answer: ${data.current}`;
+		// The user is guessing a single letter
+		if (type === `letter`) {
+			if (data.key[guess] != null) {
+				data.current = addLetter(data.key, data.current, guess);
+				won = data.current == data.solution;
 			};
-		} else {
-			data.incorrect++;
+		}
+
+		// The user is guessing the entire solution
+		else if (type === `solve`) {
+			guess = spacePhrase(guess).replace(/[^a-z█] /gi, ``);
+			let solved = data.solution.replace(/[^a-z█] /gi, ``);
+
+			if (guess === solved) {
+				won = true;
+			} else {
+				data.incorrect += config.game.incorrect_solve_penalty;
+			};
+		};
+
+
+		/*
+		The player(s) won the game, so we want to tell the overlay(s) and
+		then respond to the request.
+		*/
+		if (won) {
+			request.server.app.io.to(channel).emit(`finish`, {
+				win: true,
+				solution: data.solution,
+			});
+
+			// NOTE: This might cause reference issues with the return
+			await database.resetChannel(channel);
+			return `Congrats! You won. Merry Chatmanmas! Answer: ${data.solution}`;
 		};
 
 
@@ -50,10 +73,20 @@ const route: ServerRoute = {
 				win: false,
 				solution: data.solution,
 			});
+
+			// NOTE: This might cause reference issues with the return
+			await database.resetChannel(channel);
 			return `Oop, you ded. Answer: ${data.solution}`;
 		};
 
-		// Update all the overlays for the channel
+
+		// clamp the incorrect value to prevent weird behaviours in overlays
+		data.incorrect = Math.min(data.incorrect, config.game.max_incorrect);
+
+		/*
+		Update all the overlays for the channel and tell the user the new game
+		state.
+		*/
 		request.server.app.io.to(channel).emit(`update`, {
 			current: data.current,
 			incorrect: {
