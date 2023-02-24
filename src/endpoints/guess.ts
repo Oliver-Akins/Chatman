@@ -36,6 +36,8 @@ const route: ServerRoute = {
 			if (data.key[guess] != null) {
 				data.current = addLetter(data.key, data.current, guess);
 				won = data.current == data.solution;
+			} else {
+				data.incorrect += config.game.penalties.guess;
 			};
 		}
 
