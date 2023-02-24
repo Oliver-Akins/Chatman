@@ -1,5 +1,7 @@
 import { nightbotCustomHeadersSchema } from "$/schemas/nightbot";
+import { escapeDiscordMarkdown } from "$/utils/markdown";
 import { Request, ServerRoute } from "@hapi/hapi";
+import { config } from "$/main";
 import boom from "@hapi/boom";
 import Joi from "joi";
 
@@ -52,14 +54,36 @@ const subcommands: {[index: string]: subcommand} = {
 				return `You can only guess one letter at a time!`
 			};
 
-			return (await req.server.inject({
+			let r = await req.server.inject({
 				method: `POST`,
 				url: `/${meta.channel}/guess`,
 				payload: {
 					type: `letter`,
 					guess: meta.args[1]
 				}
-			})).payload;
+			});
+
+			if (r.statusCode != 200) {
+				return `Something went wrong : ` + r.statusMessage;
+			};
+			let d = r.payload as any;
+			let m: string;
+			switch (d.status) {
+				case 1:
+					m = `"${meta.args[1].toUpperCase()}" has been guessed already. \n(incorrect: ${d.incorrect}/${config.game.max_incorrect})`;
+					break;
+				case 2:
+					m = `Merry chatmanmas! You won! Answer: ${d.current}`;
+					break;
+				case 3:
+					m = `Booooo, you lost! Answer: ${d.current}`;
+					break;
+				case 4:
+					m = `${d.current} \n(incorrect:${d.incorrect}/${config.game.max_incorrect})`;
+					break;
+				default: m = `Unknown guess status: ${d.status}`;
+			};
+			return m;
 		},
 	},
 	"solve": {
@@ -127,10 +151,15 @@ const route: ServerRoute = {
 			return `That command is mod-only! :P`;
 		};
 
-		return subcommands[sc].handler(
+		let m = await subcommands[sc].handler(
 			{ channel, user, args },
 			request
 		);
+
+		if (channelData.get(`provider`) == `discord`) {
+			m = escapeDiscordMarkdown(m);
+		};
+		return m;
 	},
 };
 export default route;
