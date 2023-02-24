@@ -175,7 +175,7 @@ const route: ServerRoute = {
 			request
 		);
 
-		if (channelData.get(`provider`) == `discord`) {
+		if (userData.get(`provider`) == `discord`) {
 			m = escapeDiscordMarkdown(m);
 		};
 		return m;

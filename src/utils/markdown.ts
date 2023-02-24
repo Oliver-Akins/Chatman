@@ -3,6 +3,6 @@ export function escapeDiscordMarkdown(message: string) {
 	m = m.replace(/_/gi, `\_`);
 	m = m.replace(/\*/gi, `\*`);
 	m = m.replace(/~/gi, `\~`);
-	m = m.replace(/||/gi, `\||`);
+	m = m.replace(/\|\|/gi, `\||`);
 	return m;
 };
