@@ -33,6 +33,18 @@ const route: ServerRoute = {
 
 		// The user is guessing a single letter
 		if (type === `letter`) {
+
+			if (data.guesses.includes(guess)) {
+				data.incorrect += config.game.penalties.duplicate;
+				return {
+					status: 1,
+					current: data.current,
+					incorrect: data.incorrect,
+					won,
+				};
+			}
+			data.guesses.push(guess);
+
 			if (data.key[guess] != null) {
 				data.current = addLetter(data.key, data.current, guess);
 				won = data.current == data.solution;
@@ -66,7 +78,11 @@ const route: ServerRoute = {
 
 			// NOTE: This might cause reference issues with the return
 			await database.resetChannel(channel);
-			return `Congrats! You won. Merry Chatmanmas! Answer: ${data.solution}`;
+			return {
+				status: 2,
+				current: data.current,
+				incorrect: data.incorrect,
+			};
 		};
 
 
@@ -82,7 +98,11 @@ const route: ServerRoute = {
 
 			// NOTE: This might cause reference issues with the return
 			await database.resetChannel(channel);
-			return `Oop, you ded. Answer: ${data.solution}`;
+			return {
+				status: 3,
+				current: data.current,
+				incorrect: data.incorrect,
+			};
 		};
 
 
@@ -100,7 +120,11 @@ const route: ServerRoute = {
 				max: config.game.max_incorrect,
 			},
 		});
-		return `${data.current} (incorrect: ${data.incorrect}/${config.game.max_incorrect})`;
+		return {
+			status: 4,
+			current: data.current,
+			incorrect: data.incorrect,
+		};
 	},
 };
 export default route;
