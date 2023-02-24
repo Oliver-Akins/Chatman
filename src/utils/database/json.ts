@@ -29,6 +29,7 @@ export class JSONDatabase {
 			solution: null,
 			key: null,
 			incorrect: 0,
+			guesses: [],
 		};
 	};
 
