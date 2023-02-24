@@ -1,14 +1,34 @@
 import Joi from "joi";
 
+const render = true;
+
+export const penaltyOptionsSchema = Joi.object({
+	guess: Joi
+		.number()
+		.integer()
+		.min(0)
+		.max(Joi.ref(`...max_incorrect`, { render }))
+		.default(1),
+	solve: Joi
+		.number()
+		.integer()
+		.min(0)
+		.max(Joi.ref(`...max_incorrect`, { render }))
+		.default(1),
+	duplicate: Joi
+		.number()
+		.integer()
+		.min(0)
+		.max(Joi.ref(`...max_incorrect`, { render }))
+		.default(0),
+})
+.meta({ className: `penaltyOptions` })
+.description(`The options for all of the penalties from actions`);
 
 export const gameOptionsSchema = Joi.object({
 	files: Joi.object().required().min(1).unknown(true),
 	max_incorrect: Joi.number().min(1).default(6),
-	incorrect_solve_penalty: Joi
-		.number()
-		.min(0)
-		.max(Joi.ref(`max_incorrect`, { render: true }))
-		.default(1),
+	penalties: penaltyOptionsSchema.required(),
 })
 .meta({ className: `gameOptions` })
 .description(`The game-specific options`);
