@@ -98,7 +98,7 @@ const subcommands: {[index: string]: subcommand} = {
 				method: `POST`,
 				url: `/${meta.channel}/guess`,
 				payload: {
-					type: `letter`,
+					type: `solve`,
 					guess: meta.args[1]
 				}
 			});
