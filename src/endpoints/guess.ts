@@ -49,7 +49,7 @@ const route: ServerRoute = {
 			if (guess === solved) {
 				won = true;
 			} else {
-				data.incorrect += config.game.incorrect_solve_penalty;
+				data.incorrect += config.game.penalties.solve;
 			};
 		};
 
