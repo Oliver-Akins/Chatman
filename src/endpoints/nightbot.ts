@@ -66,7 +66,7 @@ const subcommands: {[index: string]: subcommand} = {
 			if (r.statusCode != 200) {
 				return `Something went wrong : ` + r.statusMessage;
 			};
-			let d = r.payload as any;
+			let d = JSON.parse(r.payload);
 			let m: string;
 			switch (d.status) {
 				case 1:
@@ -94,14 +94,36 @@ const subcommands: {[index: string]: subcommand} = {
 				return `You need to provide a solution if you want to solve!`;
 			};
 
-			return (await req.server.inject({
+			let r = await req.server.inject({
 				method: `POST`,
 				url: `/${meta.channel}/guess`,
 				payload: {
-					type: `solve`,
-					guess: meta.args.slice(1).join(` `)
+					type: `letter`,
+					guess: meta.args[1]
 				}
-			})).payload;
+			});
+
+			if (r.statusCode != 200) {
+				return `Something went wrong : ` + r.statusMessage;
+			};
+			let d = JSON.parse(r.payload);
+			let m: string;
+			switch (d.status) {
+				case 1:
+					m = `"${meta.args[1].toUpperCase()}" has been guessed already. \n(incorrect: ${d.incorrect}/${config.game.max_incorrect})`;
+					break;
+				case 2:
+					m = `Merry chatmanmas! You won! Answer: ${d.current}`;
+					break;
+				case 3:
+					m = `Booooo, you lost! Answer: ${d.current}`;
+					break;
+				case 4:
+					m = `${d.current} \n(incorrect:${d.incorrect}/${config.game.max_incorrect})`;
+					break;
+				default: m = `Unknown guess status: ${d.status}`;
+			};
+			return m;
 		},
 	},
 };
@@ -136,10 +158,7 @@ const route: ServerRoute = {
 
 		// User is guessing a letter
 		if (args[0].length == 1) {
-			return (await request.server.inject({
-				method: `POST`, url: `/${channel}/guess`,
-				payload: { guess: args[0] }
-			})).payload;
+			args = [`guess`, args[0]];
 		};
 
 		let sc = args[0];
