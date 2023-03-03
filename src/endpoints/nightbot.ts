@@ -76,7 +76,7 @@ const subcommands: {[index: string]: subcommand} = {
 					m = `Merry chatmanmas! You won! Answer: ${d.current}`;
 					break;
 				case 3:
-					m = `Booooo, you lost! Answer: ${d.current}`;
+					m = `Booooo, you lost! Answer: ${d.solution}`;
 					break;
 				case 4:
 					m = `${d.current} \n(incorrect:${d.incorrect}/${config.game.max_incorrect})`;
@@ -116,7 +116,7 @@ const subcommands: {[index: string]: subcommand} = {
 					m = `Merry chatmanmas! You won! Answer: ${d.current}`;
 					break;
 				case 3:
-					m = `Booooo, you lost! Answer: ${d.current}`;
+					m = `Booooo, you lost! Answer: ${d.solution}`;
 					break;
 				case 4:
 					m = `${d.current} \n(incorrect:${d.incorrect}/${config.game.max_incorrect})`;
