@@ -102,6 +102,7 @@ const route: ServerRoute = {
 				status: 3,
 				current: data.current,
 				incorrect: data.incorrect,
+				solution: data.solution,
 			};
 		};
 
