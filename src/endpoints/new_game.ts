@@ -1,6 +1,6 @@
 import { anonymizePhrase, convertToKey, spacePhrase } from "$/utils/game";
 import { channelSchema } from "$/schemas/general";
-import { config, database } from "$/main";
+import { config, database, log } from "$/main";
 import { ServerRoute } from "@hapi/hapi";
 import { readFileSync } from "fs";
 import boom from "@hapi/boom";
@@ -31,6 +31,7 @@ const route: ServerRoute = {
 		let phrases = readFileSync(config.game.files[word_list] as string, `utf-8`).split(`\n`);
 		let phrase = phrases[Math.floor(Math.random() * phrases.length)].trim();
 
+		log.info(`New game in ${channel} with answer: ${phrase}`);
 
 		let spaced = spacePhrase(phrase.toUpperCase());
 		let anonymized = anonymizePhrase(spaced);
