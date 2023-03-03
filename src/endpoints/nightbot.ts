@@ -79,7 +79,7 @@ const subcommands: {[index: string]: subcommand} = {
 					m = `Booooo, you lost! Answer: ${d.solution}`;
 					break;
 				case 4:
-					m = `${d.current} \n(incorrect:${d.incorrect}/${config.game.max_incorrect})`;
+					m = `${d.current} \n(incorrect: ${d.incorrect}/${config.game.max_incorrect})`;
 					break;
 				default: m = `Unknown guess status: ${d.status}`;
 			};
@@ -119,7 +119,7 @@ const subcommands: {[index: string]: subcommand} = {
 					m = `Booooo, you lost! Answer: ${d.solution}`;
 					break;
 				case 4:
-					m = `${d.current} \n(incorrect:${d.incorrect}/${config.game.max_incorrect})`;
+					m = `${d.current} \n(incorrect: ${d.incorrect}/${config.game.max_incorrect})`;
 					break;
 				default: m = `Unknown guess status: ${d.status}`;
 			};
