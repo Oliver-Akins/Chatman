@@ -99,7 +99,7 @@ const subcommands: {[index: string]: subcommand} = {
 				url: `/${meta.channel}/guess`,
 				payload: {
 					type: `solve`,
-					guess: meta.args[1]
+					guess: meta.args.slice(1).join(` `),
 				}
 			});
 
