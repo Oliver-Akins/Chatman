@@ -73,7 +73,7 @@ const subcommands: {[index: string]: subcommand} = {
 					m = `"${meta.args[1].toUpperCase()}" has been guessed already. \n(incorrect: ${d.incorrect}/${config.game.max_incorrect})`;
 					break;
 				case 2:
-					m = `Merry chatmanmas! You won! Answer: ${d.current}`;
+					m = `Merry chatmanmas! You won! Answer: ${d.solution}`;
 					break;
 				case 3:
 					m = `Booooo, you lost! Answer: ${d.solution}`;
@@ -113,7 +113,7 @@ const subcommands: {[index: string]: subcommand} = {
 					m = `"${meta.args[1].toUpperCase()}" has been guessed already. \n(incorrect: ${d.incorrect}/${config.game.max_incorrect})`;
 					break;
 				case 2:
-					m = `Merry chatmanmas! You won! Answer: ${d.current}`;
+					m = `Merry chatmanmas! You won! Answer: ${d.solution}`;
 					break;
 				case 3:
 					m = `Booooo, you lost! Answer: ${d.solution}`;
