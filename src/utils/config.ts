@@ -1,39 +1,36 @@
 import { configSchema } from "$/schemas/config";
 import type { config } from "$/types/config";
-import { isDev } from "$/main";
-import toml from "@iarna/toml";
-import fs from "fs";
 
 
 /**
  * Attempts to load the config from disk and validate it's structure.
  */
-export function loadConfig() {
-	let file = null;
+export function loadConfig(): config {
+	const data: config = {
+		database: {
+			uri: `./data.json`,
+		},
+		game: {
+			files: {},
+			penalties: {
+				guess: 1,
+				solve: 2,
+				duplicate: 0,
+			},
+			max_incorrect: 6,
+		},
+		server: {
+			port: 6969,
+		},
+	};
 
-	if (isDev) {
-		try {
-			file = fs.readFileSync(`./config.dev.toml`, `utf-8`);
-		} catch (_) {
-			console.error(`Couldn't find development config, checking production`);
+	for (var envvar in process.env) {
+		let value = process.env[envvar];
+		if (envvar.startsWith(`FILE_`)) {
+			data.game.files[envvar.slice(5).toLowerCase()] = value;
 		};
 	};
-
-	if (!file) {
-		try {
-			file = fs.readFileSync(`./config.toml`, `utf-8`);
-		} catch (_) {
-			console.error(`Couldn't find production config. Fill out the config and run the server again`);
-			process.exit(1);
-		};
-	};
-
-	try {
-		var data = toml.parse(file);
-	} catch (_) {
-		console.error(`Invalid TOML file, stopping server`);
-		process.exit(1);
-	};
+	console.log(data.game.files)
 
 	let { error, value } = configSchema.validate(data, { abortEarly: false });
 	if (error) {
