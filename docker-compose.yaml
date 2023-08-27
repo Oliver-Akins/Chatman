@@ -5,7 +5,7 @@ services:
   api:
     build:
       dockerfile: "dockerfile"
-      target: "dev"
+      target: "prod"
     ports:
       - "6969:6969"
     environment:

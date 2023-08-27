@@ -24,4 +24,5 @@ from base as prod
 copy ./docs /app/docs
 run npm install --omit=dev
 run rm -rf src tsconfig.json
-cmd [ "NODE_ENV=production", "node", "dist/main.js" ]
+env NODE_ENV=production
+cmd [ "node", "dist/main.js" ]
