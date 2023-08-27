@@ -1,0 +1,16 @@
+version: "3"
+name: "chatman"
+services:
+
+  api:
+    build:
+      dockerfile: "dockerfile"
+      target: "dev"
+    ports:
+      - "6969:6969"
+    environment:
+      NODE_ENV: "dev"
+    volumes:
+      - "./data.json:/app/data.json"
+      - "./site:/app/site"
+      - "./word-lists:/app/word-lists"
