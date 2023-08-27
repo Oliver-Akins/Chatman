@@ -30,7 +30,6 @@ export function loadConfig(): config {
 			data.game.files[envvar.slice(5).toLowerCase()] = value;
 		};
 	};
-	console.log(data.game.files)
 
 	let { error, value } = configSchema.validate(data, { abortEarly: false });
 	if (error) {
