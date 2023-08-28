@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "test": "echo \"Use the makefile\" && exit 1"
+    "test": "echo \"Use the makefile\" && exit 1",
+    "generateInterfaces": "ts-node generateInterfaces.ts 2>/dev/null"
   },
   "keywords": [],
   "author": "Oliver Akins",
