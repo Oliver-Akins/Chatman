@@ -28,7 +28,12 @@ const route: ServerRoute = {
 		if (config.game.files[word_list] == null) {
 			throw boom.notAcceptable(`Invalid word list`);
 		};
-		let phrases = readFileSync(config.game.files[word_list] as string, `utf-8`).split(`\n`);
+		let phrases: string[];
+		try {
+			phrases = readFileSync(config.game.files[word_list] as string, `utf-8`).split(`\n`);
+		} catch {
+			return `Couldn't load word list "${word_list}", please try a different one`;
+		};
 		let phrase = phrases[Math.floor(Math.random() * phrases.length)].trim();
 
 		log.info(`New game in ${channel} with answer: ${phrase}`);
