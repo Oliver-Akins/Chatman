@@ -5,6 +5,7 @@ data/
 .vscode/
 src/types/**/*.ts
 words/
+data.json
 
 # Logs
 logs
