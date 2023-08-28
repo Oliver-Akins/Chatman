@@ -3,7 +3,6 @@ data/
 *.toml
 !config.template.toml
 .vscode/
-src/types/**/*.ts
 words/
 data.json
 
