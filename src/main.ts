@@ -74,7 +74,7 @@ async function init() {
 			if (data == null) {
 				return socket.emit(`state`, { active: false });
 			};
-			
+
 			socket.join(channel);
 			return socket.emit(`state`, {
 				active: data.current != null,
