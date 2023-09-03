@@ -33,6 +33,15 @@ const subcommands: {[index: string]: subcommand} = {
 			})).payload;
 		},
 	},
+	"end": {
+		modOnly: true,
+		async handler(meta, req) {
+			return (await req.server.inject({
+				method: `DELETE`,
+				url: `/${meta.channel}/game`
+			})).payload;
+		},
+	},
 	"show": {
 		modOnly: false,
 		async handler(meta, req) {
