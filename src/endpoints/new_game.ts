@@ -23,6 +23,9 @@ const route: ServerRoute = {
 		const { word_list } = request.query;
 
 		let data = await database.getChannel(channel);
+		if (data == null) {
+			throw boom.badRequest(`Couldn't find the requested channel's information, make sure to register it`);
+		};
 
 
 		if (config.game.files[word_list] == null) {
