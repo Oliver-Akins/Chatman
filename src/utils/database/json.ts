@@ -38,6 +38,9 @@ export class JSONDatabase {
 	};
 
 	public async getChannel(name: string) {
+		if (this.data[name] == null) {
+			this.resetChannel(name);
+		};
 		return this.data[name];
 	};
 };
