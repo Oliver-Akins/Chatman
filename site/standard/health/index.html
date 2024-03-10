@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="standard-health/style.css">
+	<script src="../../vue.js"></script>
+	<script src="standard-health/app.js" defer></script>
+	<script src="../../socket.io/socket.io.js"></script>
+</head>
+<body>
+	<div id="app">
+		<transition
+			name="grow"
+		>
+			<div
+				v-if="showOverlay"
+				v-cloak
+				class="container"
+			>
+				<h1>Chatman</h1>
+				<div id="main-play-area">
+					<div id="health-bar">
+						<div v-for="_ in currentHealth" class="health filled"></div>
+						<div v-for="_ in lostHealth" class="health empty"></div>
+					</div>
+					<h2 id="word" v-html="parsedText"></h2>
+				</div>
+			</div>
+		</transition>
+	</div>
+</body>
+</html>
