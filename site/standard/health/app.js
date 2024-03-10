@@ -48,7 +48,6 @@ const app = new Vue({
 		}
 		*/
 		activity(d) {
-			console.log(`active listeners`, d)
 			if (d.active) {
 				this.newState(d);
 				this.gameActive = true;
