@@ -20,14 +20,24 @@ html, body, #app {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-	background: rgba(0, 0, 0, .5);
+	background: rgba(60, 51, 146, 0.8);
 	position: relative;
 	text-align: center;
 	border-radius: 15px;
+	padding: 1rem;
+	color: white;
 }
 
 h1 {
-	margin-bottom: 5px;
+	line-height: 2rem;
+	margin: 5px 0;
+	letter-spacing: 2px;
+}
+
+h2 {
+	line-height: 1.5rem;
+	margin: 20px 0 5px;
+	letter-spacing: 2px;
 }
 
 #health-bar {

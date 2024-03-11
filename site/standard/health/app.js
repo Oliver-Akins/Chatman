@@ -25,9 +25,6 @@ const app = new Vue({
 		currentHealth() {
 			return this.totalHealth - this.lostHealth;
 		},
-		parsedText() {
-			return this.current.split(` █ `).join(`<br>`);
-		},
 	},
 	methods: {
 		connected() {
